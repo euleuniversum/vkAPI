@@ -42,7 +42,6 @@ function showUsersFriends(user: User) {
 }
 
 function getFriendsUrl(user) {
-    console.log(user)
     return Promise.resolve(`https://api.vk.com/method/friends.get?user_id=${user.id}&order=hints&count=${user.count}&fields=city&access_token=${user.token}&v=5.52`);
 }
 
