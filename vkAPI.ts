@@ -30,7 +30,13 @@ function getArgs(): string[] {
 async function getDataResponse(url: string) {
     return await fetch(url, {method: 'GET'})
         .then(response => response.json())
-        .then(response => response.response);
+        .then(response => {
+            return (response === undefined) ?
+                Promise.reject("ответ с сервера не был получен") :
+                (response.response === undefined) ?
+                    Promise.reject(`Код ошибки: ${response.error.error_code} Сообщение: ${response.error.error_msg}`) :
+                    response.response
+        })
 }
 
 function showUsersFriends(user: User) {
