@@ -3,13 +3,14 @@ import fetch from 'node-fetch'
 interface User {
     token: string
     id: string
+    count: string
 }
 
 vkAPI()
 
 function vkAPI() {
-    const [token, id] = getArgs().slice(2);
-    const user: User = {token, id};
+    const [token, id, count] = getArgs().slice(2);
+    const user: User = {token, id, count};
 
     showUsersFriends(user);
     showUsersSubscriptions(user);
@@ -17,9 +18,9 @@ function vkAPI() {
 
 function getArgs(): string[] {
     const args: string[] = process.argv;
-    if (args === undefined || args.length < 4) {
-        console.log("Введите свой access_token и id пользователя\n" +
-            "node vkAPI [key] [id] "
+    if (args === undefined || args.length < 5) {
+        console.log("Введите свой access_token, id пользователя и количество позиций, которое нужно вернуть \n" +
+            "ts-node vkAPI.ts [token] [id] [count]"
         );
         process.exit(1);
     }
@@ -33,15 +34,16 @@ async function getDataResponse(url: string) {
 }
 
 function showUsersFriends(user: User) {
-    getFriendsUrl(user.token, user.id)
+    getFriendsUrl(user)
         .then(userUrl => getDataResponse(userUrl))
         .then(response => getUsersInfo(response.items, response.count))
         .then(info => console.log(info))
         .catch(reject => console.log(reject));
 }
 
-function getFriendsUrl(token, id) {
-    return Promise.resolve(`https://api.vk.com/method/friends.get?user_id=${id}&order=hints&count=10&fields=city&access_token=${token}&v=5.52`);
+function getFriendsUrl(user) {
+    console.log(user)
+    return Promise.resolve(`https://api.vk.com/method/friends.get?user_id=${user.id}&order=hints&count=${user.count}&fields=city&access_token=${user.token}&v=5.52`);
 }
 
 function getUsersInfo(friends, count: number): string {
@@ -58,15 +60,15 @@ function getUsersInfo(friends, count: number): string {
 }
 
 function showUsersSubscriptions(user: User) {
-    getSubscriptionsUrl(user.token, user.id)
+    getSubscriptionsUrl(user)
         .then(groupUrl => getDataResponse(groupUrl))
         .then(response => getSubscriptionsInfo(response.items, response.count))
         .then(info => console.log(info))
         .catch(reject => console.log(reject));
 }
 
-function getSubscriptionsUrl(token, id) {
-    return Promise.resolve(`https://api.vk.com/method/users.getSubscriptions?user_id=${id}&extended=1&count=10&fields=name&access_token=${token}&v=5.52`);
+function getSubscriptionsUrl(user) {
+    return Promise.resolve(`https://api.vk.com/method/users.getSubscriptions?user_id=${user.id}&extended=1&count=${user.count}&fields=name&access_token=${user.token}&v=5.52`);
 }
 
 function getSubscriptionsInfo(subscriptions, count) {
