@@ -9,7 +9,7 @@
 
 ## Подготовка
 Для запуска приложения необходимо получить токен. 
-Это можно сделать перейдя по [ссылке](https://oauth.vk.com/authorize?client_id=7806475&display=page&scope=friends,groups&response_type=token&v=5.52), и предоставив приложению доступ к своему аккаунту.
+Это можно сделать перейдя по [ссылке](https://oauth.vk.com/authorize?client_id=7806475&display=page&scope=friends&response_type=token&v=5.52), и предоставив приложению доступ к своему аккаунту.
 Далле в адресной строке найти значение `access_token` и скопировать его себе
 
 ## Запуск
